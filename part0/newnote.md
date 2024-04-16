@@ -31,7 +31,7 @@ Note right of b: Browser executes .js file that fetches the JSON from server
 
 b->>s: GET https://studies.cs.helsinki.fi/exampleapp/data.json
 activate s
-s-->> b: [ ..., { "content": "hello world", "date": "2024-04-16" } ]
+s-->> b: [{ "content": "hello world", "date": "2024-04-16" }, ... ]
 deactivate s
 
 Note right of b: The browser executes the callback function that renders the notes with newly added data
