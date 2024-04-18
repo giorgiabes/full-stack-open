@@ -14,10 +14,23 @@ const Display = ({ text, score }) => (
   </div>
 );
 
+const Stats = ({ all, average, positive }) => {
+  return (
+    <div>
+      <div>all {all}</div>
+      <div>average {average}</div>
+      <div>positive {positive}%</div>
+    </div>
+  );
+};
+
 function App() {
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
+  const all = good + neutral + bad;
+  const average = (good - bad) / all || 0;
+  const positive = (good / all) * 100;
 
   const incrGood = () => setGood(good + 1);
   const incrNeutral = () => setNeutral(neutral + 1);
@@ -33,6 +46,7 @@ function App() {
       <Display text="good" score={good} />
       <Display text="neutral" score={neutral} />
       <Display text="bad" score={bad} />
+      <Stats all={all} average={average} positive={positive} />
     </div>
   );
 }
