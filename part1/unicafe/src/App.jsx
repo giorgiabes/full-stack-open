@@ -24,18 +24,34 @@ const Display = (props) => {
     return (
       <div>
         <h1>statistics</h1>
-        <div>
-          {props.textGood} {props.scoreGood}
-        </div>
-        <div>
-          {props.textNeutral} {props.scoreNeutral}
-        </div>
-        <div>
-          {props.textBad} {props.scoreBad}
-        </div>
-        <div>all {props.all}</div>
-        <div>average {props.average}</div>
-        <div>positive {props.positive}%</div>
+        <table>
+          <tbody>
+            <tr>
+              <td>{props.textGood}</td>
+              <td>{props.scoreGood}</td>
+            </tr>
+            <tr>
+              <td>{props.textNeutral}</td>
+              <td>{props.scoreNeutral}</td>
+            </tr>
+            <tr>
+              <td>{props.textBad}</td>
+              <td>{props.scoreBad}</td>
+            </tr>
+            <tr>
+              <td>all</td>
+              <td>{props.all}</td>
+            </tr>
+            <tr>
+              <td>average</td>
+              <td>{props.average}</td>
+            </tr>
+            <tr>
+              <td>positive</td>
+              <td>{props.positive}%</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     );
   }
