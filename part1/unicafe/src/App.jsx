@@ -1,27 +1,44 @@
 import { useState } from "react";
 
-const Head = () => <h1>give feedback</h1>;
+const Head = ({ text }) => <h1>{text}</h1>;
 
-const Button = ({ increment, text }) => {
-  return <button onClick={increment}>{text}</button>;
-};
-
-const Statistics = () => <h1>statistics</h1>;
-
-const Display = ({ text, score }) => (
-  <div>
-    {text} {score}
-  </div>
-);
-
-const Stats = ({ all, average, positive }) => {
+const Button = (props) => {
   return (
     <div>
-      <div>all {all}</div>
-      <div>average {average}</div>
-      <div>positive {positive}%</div>
+      <button onClick={props.incrGood}>{props.textGood}</button>
+      <button onClick={props.incrNeutral}>{props.textNeutral}</button>
+      <button onClick={props.incrBad}>{props.textBad}</button>
     </div>
   );
+};
+
+const Display = (props) => {
+  if (props.all === 0) {
+    return (
+      <>
+        <h1>statistics</h1>
+        <div>No feedback given</div>
+      </>
+    );
+  } else {
+    return (
+      <div>
+        <h1>statistics</h1>
+        <div>
+          {props.textGood} {props.scoreGood}
+        </div>
+        <div>
+          {props.textNeutral} {props.scoreNeutral}
+        </div>
+        <div>
+          {props.textBad} {props.scoreBad}
+        </div>
+        <div>all {props.all}</div>
+        <div>average {props.average}</div>
+        <div>positive {props.positive}%</div>
+      </div>
+    );
+  }
 };
 
 function App() {
@@ -29,7 +46,7 @@ function App() {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
   const all = good + neutral + bad;
-  const average = (good - bad) / all || 0;
+  const average = (good - bad) / all;
   const positive = (good / all) * 100;
 
   const incrGood = () => setGood(good + 1);
@@ -37,17 +54,28 @@ function App() {
   const incrBad = () => setBad(bad + 1);
 
   return (
-    <div>
-      <Head />
-      <Button increment={incrGood} text="good" />
-      <Button increment={incrNeutral} text="neutral" />
-      <Button increment={incrBad} text="bad" />
-      <Statistics />
-      <Display text="good" score={good} />
-      <Display text="neutral" score={neutral} />
-      <Display text="bad" score={bad} />
-      <Stats all={all} average={average} positive={positive} />
-    </div>
+    <>
+      <Head text="give feedback" />
+      <Button
+        incrGood={incrGood}
+        incrNeutral={incrNeutral}
+        incrBad={incrBad}
+        textGood="good"
+        textNeutral="neutral"
+        textBad="bad"
+      />
+      <Display
+        textGood="good"
+        textNeutral="neutral"
+        textBad="bad"
+        scoreGood={good}
+        scoreNeutral={neutral}
+        scoreBad={bad}
+        all={all}
+        average={average}
+        positive={positive}
+      />
+    </>
   );
 }
 
