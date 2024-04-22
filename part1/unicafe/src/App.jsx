@@ -1,98 +1,92 @@
 import { useState } from "react";
 
-const Head = ({ text }) => <h1>{text}</h1>;
+const StatisticLine = ({ text, value }) => {
+  if (text === "positive") {
+    return (
+      <table>
+        <tbody>
+          <tr>
+            <td>{text}</td>
+            <td>{value}%</td>
+          </tr>
+        </tbody>
+      </table>
+    );
+  }
+  return (
+    <table>
+      <tbody>
+        <tr>
+          <td>{text}</td>
+          <td>{value}</td>
+        </tr>
+      </tbody>
+    </table>
+  );
+};
 
-const Button = (props) => {
+const Statistics = (props) => {
+  const { good, neutral, bad, all, average, positive } = props;
+  if (all === 0) {
+    return (
+      <div>
+        <h1>statistics</h1>
+        <p>No feedback given</p>
+      </div>
+    );
+  }
   return (
     <div>
-      <button onClick={props.incrGood}>{props.textGood}</button>
-      <button onClick={props.incrNeutral}>{props.textNeutral}</button>
-      <button onClick={props.incrBad}>{props.textBad}</button>
+      <h1>statistics</h1>
+      <StatisticLine text="good" value={good} />
+      <StatisticLine text="neutral" value={neutral} />
+      <StatisticLine text="bad" value={bad} />
+      <StatisticLine text="all" value={all} />
+      <StatisticLine text="average" value={average} />
+      <StatisticLine text="positive" value={positive} />
     </div>
   );
 };
 
-const Display = (props) => {
-  if (props.all === 0) {
-    return (
-      <>
-        <h1>statistics</h1>
-        <div>No feedback given</div>
-      </>
-    );
-  } else {
-    return (
-      <div>
-        <h1>statistics</h1>
-        <table>
-          <tbody>
-            <tr>
-              <td>{props.textGood}</td>
-              <td>{props.scoreGood}</td>
-            </tr>
-            <tr>
-              <td>{props.textNeutral}</td>
-              <td>{props.scoreNeutral}</td>
-            </tr>
-            <tr>
-              <td>{props.textBad}</td>
-              <td>{props.scoreBad}</td>
-            </tr>
-            <tr>
-              <td>all</td>
-              <td>{props.all}</td>
-            </tr>
-            <tr>
-              <td>average</td>
-              <td>{props.average}</td>
-            </tr>
-            <tr>
-              <td>positive</td>
-              <td>{props.positive}%</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    );
-  }
+const Button = (props) => {
+  return (
+    <>
+      <button onClick={props.handleGood}>good</button>
+      <button onClick={props.handleNeutral}>neutral</button>
+      <button onClick={props.handleBad}>bad</button>
+    </>
+  );
 };
 
-function App() {
+const App = () => {
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
   const all = good + neutral + bad;
   const average = (good - bad) / all;
   const positive = (good / all) * 100;
-
-  const incrGood = () => setGood(good + 1);
-  const incrNeutral = () => setNeutral(neutral + 1);
-  const incrBad = () => setBad(bad + 1);
+  const handleGood = () => setGood(good + 1);
+  const handleNeutral = () => setNeutral(neutral + 1);
+  const handleBad = () => setBad(bad + 1);
 
   return (
-    <>
-      <Head text="give feedback" />
+    <div>
+      <h1>give feedback</h1>
       <Button
-        incrGood={incrGood}
-        incrNeutral={incrNeutral}
-        incrBad={incrBad}
-        textGood="good"
-        textNeutral="neutral"
-        textBad="bad"
+        handleGood={handleGood}
+        handleNeutral={handleNeutral}
+        handleBad={handleBad}
       />
-      <Display
-        textGood="good"
-        textNeutral="neutral"
-        textBad="bad"
-        scoreGood={good}
-        scoreNeutral={neutral}
-        scoreBad={bad}
+      <Statistics
+        good={good}
+        neutral={neutral}
+        bad={bad}
         all={all}
         average={average}
         positive={positive}
       />
-    </>
+    </div>
   );
-}
+};
 
 export default App;
