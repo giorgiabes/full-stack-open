@@ -23,10 +23,33 @@ const App = () => {
       number: newNumber,
     };
 
-    const isAdded = persons.find((person) => person.name === personObject.name);
+    const existingPerson = persons.find(
+      (person) => person.name === personObject.name
+    );
 
-    if (isAdded) {
-      alert(`${newName} is already added to phonebook`);
+    if (existingPerson) {
+      const confirmUpdate = confirm(
+        `${personObject.name} is already added to phonebook, replace the old number with new one?`
+      );
+      if (confirmUpdate) {
+        const url = "http://localhost:3002/persons";
+        const changedPerson = { ...existingPerson, number: newNumber };
+        // axios.put(`${url}/${changedPerson.id}`, changedPerson)
+        personService
+          .updateNumber(changedPerson.id, changedPerson)
+          .then((response) => {
+            setPersons(
+              persons.map((p) =>
+                p.id !== changedPerson.id ? p : response.data
+              )
+            );
+            setNewName("");
+            setNewNumber("");
+          });
+      } else {
+        setNewName("");
+        setNewNumber("");
+      }
     } else {
       personService.create(personObject).then((retunredPerson) => {
         setPersons(persons.concat(retunredPerson));
@@ -38,14 +61,16 @@ const App = () => {
 
   const deletePerson = (id) => {
     const person = persons.find((p) => p.id === id);
+    const confirmDelete = confirm(`delete ${person.name}?`);
 
-    personService
-      .deletePerson(id)
-      .then(confirm(`delete ${person.name}?`))
-      .then(setPersons(persons.filter((p) => p.id !== id)))
-      .catch((error) => {
-        console.error("Error deleting", error);
-      });
+    if (confirmDelete) {
+      personService
+        .deletePerson(id)
+        .then(setPersons(persons.filter((p) => p.id !== id)))
+        .catch((error) => {
+          console.error("Error deleting", error);
+        });
+    }
   };
 
   const handleNameChange = (event) => {
