@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
-import Persons from "./components/Persons";
+import Person from "./components/Person";
 import personService from "./services/persons";
 
 const App = () => {
@@ -36,6 +36,18 @@ const App = () => {
     }
   };
 
+  const deletePerson = (id) => {
+    const person = persons.find((p) => p.id === id);
+
+    personService
+      .deletePerson(id)
+      .then(confirm(`delete ${person.name}?`))
+      .then(setPersons(persons.filter((p) => p.id !== id)))
+      .catch((error) => {
+        console.error("Error deleting", error);
+      });
+  };
+
   const handleNameChange = (event) => {
     setNewName(event.target.value);
   };
@@ -65,7 +77,15 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons filteredPersons={filteredPersons} />
+      <ul>
+        {filteredPersons.map((person) => (
+          <Person
+            key={person.id}
+            person={person}
+            deletePerson={() => deletePerson(person.id)}
+          />
+        ))}
+      </ul>
     </div>
   );
 };
