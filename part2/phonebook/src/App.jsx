@@ -4,6 +4,7 @@ import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Person from "./components/Person";
 import personService from "./services/persons";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -11,6 +12,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [successMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => setPersons(initialPersons));
@@ -34,7 +36,6 @@ const App = () => {
       if (confirmUpdate) {
         const url = "http://localhost:3002/persons";
         const changedPerson = { ...existingPerson, number: newNumber };
-        // axios.put(`${url}/${changedPerson.id}`, changedPerson)
         personService
           .updateNumber(changedPerson.id, changedPerson)
           .then((response) => {
@@ -45,6 +46,10 @@ const App = () => {
             );
             setNewName("");
             setNewNumber("");
+            setSuccessMessage(`number ${newNumber} updated`);
+            setTimeout(() => {
+              setSuccessMessage(null);
+            }, 5000);
           });
       } else {
         setNewName("");
@@ -55,6 +60,10 @@ const App = () => {
         setPersons(persons.concat(retunredPerson));
         setNewName("");
         setNewNumber("");
+        setSuccessMessage(`${retunredPerson.name} added`);
+        setTimeout(() => {
+          setSuccessMessage(null);
+        }, 5000);
       });
     }
   };
@@ -92,6 +101,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successMessage} />
       <Filter searchTerm={searchTerm} handleSearch={handleSearch} />
       <h3>Add a new entry</h3>
       <PersonForm
