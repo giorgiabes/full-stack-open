@@ -12,7 +12,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [successMessage, setSuccessMessage] = useState(null);
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => setPersons(initialPersons));
@@ -46,9 +46,19 @@ const App = () => {
             );
             setNewName("");
             setNewNumber("");
-            setSuccessMessage(`number ${newNumber} updated`);
+            setMessage(`number ${newNumber} updated`);
             setTimeout(() => {
-              setSuccessMessage(null);
+              setMessage(null);
+            }, 5000);
+          })
+          .catch((error) => {
+            setMessage(
+              `Information of ${changedPerson.name} has already been removed`
+            );
+            setNewName("");
+            setNewNumber("");
+            setTimeout(() => {
+              setMessage(null);
             }, 5000);
           });
       } else {
@@ -60,9 +70,9 @@ const App = () => {
         setPersons(persons.concat(retunredPerson));
         setNewName("");
         setNewNumber("");
-        setSuccessMessage(`${retunredPerson.name} added`);
+        setMessage(`${retunredPerson.name} added`);
         setTimeout(() => {
-          setSuccessMessage(null);
+          setMessage(null);
         }, 5000);
       });
     }
@@ -101,7 +111,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={successMessage} />
+      <Notification message={message} />
       <Filter searchTerm={searchTerm} handleSearch={handleSearch} />
       <h3>Add a new entry</h3>
       <PersonForm
